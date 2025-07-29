@@ -10,10 +10,12 @@ const CustomDrawer = styled(Drawer)({
 	},
 })
 const CustomItem = styled(ListItem)({
-	marginTop: '20px',
+	transition: '500ms',
+	padding: '20px',
 	cursor: 'pointer',
 	'&:hover': {
 		backgroundColor: '#D6D6D644',
+		transform: 'translateX(3px)',
 	},
 })
 

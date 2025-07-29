@@ -1,57 +1,66 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
-import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
-import { Avatar, Box, Button, Typography } from '@mui/material'
+import { Avatar, Button } from '@mui/material'
 import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CustomBox, SearchInput } from './NavBar.module.styles.ts'
 type Props = {
 	fcn: () => void
+	pfp: string
 }
 
-const NavBar: React.FC<Props> = ({ fcn }) => {
+const NavBar: React.FC<Props> = ({ fcn, pfp }) => {
 	const [value, setValue] = useState(0)
+	const [valueTwo, setValueTwo] = useState(0)
 	const [searchInput, setSearchInput] = useState<string>('')
+
+	const navigate = useNavigate()
 	const search = (event) => {
 		event.preventDefault()
 		if (searchInput.trim().toLocaleLowerCase().includes('react')) {
-			console.log('React Grup')
+			navigate('react')
+
 			return
 		} else if (
 			searchInput.trim().toLocaleLowerCase().includes('html') ||
 			searchInput.trim().toLocaleLowerCase().includes('css')
 		) {
-			console.log('css html')
+			navigate('html')
 			return
 		} else if (searchInput.trim().toLocaleLowerCase().includes('.net')) {
-			console.log('.net')
+			navigate('net')
 			return
 		} else if (searchInput.trim().toLocaleLowerCase().includes('javascript')) {
-			console.log('javascript')
+			navigate('javascript')
 			return
 		}
 	}
 	return (
 		<CustomBox>
-			<BottomNavigation>
-				<Box
-					onClick={fcn}
+			<BottomNavigation
+				showLabels
+				value={valueTwo}
+				onChange={(event, newValue) => {
+					setValueTwo(newValue)
+				}}
+			>
+				<BottomNavigationAction
 					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						padding: 1,
-						cursor: 'pointer',
+						backgroundColor: 'whitesmoke',
 					}}
-				>
-					<BottomNavigationAction onClick={fcn} icon={<MenuIcon />} />
-					<Typography sx={{ marginLeft: 2.5 }}>Menu</Typography>
-				</Box>
+					label="Menu"
+					onClick={fcn}
+					icon={<MenuIcon />}
+				/>
 			</BottomNavigation>
 
 			<form
 				style={{
 					width: `25%`,
+
+					backgroundColor: 'whitesmoke',
 				}}
 				onSubmit={(event) => search(event)}
 			>
@@ -74,15 +83,15 @@ const NavBar: React.FC<Props> = ({ fcn }) => {
 				}}
 			>
 				<BottomNavigationAction
-					label="Settings"
-					icon={<SettingsApplicationsIcon />}
-				/>
-				<BottomNavigationAction
+					sx={{
+						backgroundColor: 'whitesmoke',
+					}}
+					onClick={() => navigate('profile')}
 					label="Profile"
 					icon={
 						<Avatar
 							alt="Remy Sharp"
-							src="/static/images/avatar/1.jpg"
+							src={pfp}
 							sx={{ width: 24, height: 24, fontSize: 12 }}
 						/>
 					}

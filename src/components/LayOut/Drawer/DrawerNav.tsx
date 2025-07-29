@@ -1,10 +1,11 @@
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { ListItem, useTheme } from '@mui/material'
+import { Button, ListItem, useTheme } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CustomDrawer, CustomItem } from './DrawerNav.styles.ts'
 
 interface Group {
@@ -16,11 +17,44 @@ interface Props {
 	onClose: () => void
 	grups: Group[]
 	open: boolean
+	setSelectedImgandTitle: any
+	setChatLog: any
+}
+interface Log {
+	user: string
+	message: string
+	id: number
 }
 
-const DrawerNav: React.FC<Props> = ({ onClose, grups, open }) => {
-	const theme = useTheme()
+const startingChat: Log = {
+	user: 'Andy',
+	message: 'Hello friend Welcome to our chat',
+	id: Math.floor(Math.random() * 10) + 1,
+}
 
+const DrawerNav: React.FC<Props> = ({
+	onClose,
+	grups,
+	open,
+	setSelectedImgandTitle,
+	setChatLog,
+}) => {
+	const theme = useTheme()
+	const navigate = useNavigate()
+	const [selectedButton, setSelectedButton] = useState('')
+
+	function handleClick(id: string, name: string, index) {
+		setSelectedButton(id)
+		navigate(`${name}`)
+		setSelectedImgandTitle(index)
+		setChatLog([startingChat])
+		onClose()
+	}
+
+	function goBackToHome() {
+		navigate('/home')
+		onClose()
+	}
 	return (
 		<CustomDrawer
 			variant="persistent"
@@ -57,14 +91,22 @@ const DrawerNav: React.FC<Props> = ({ onClose, grups, open }) => {
 					</ListItem>
 				</>
 
-				{grups.map((itm) => (
-					<CustomItem key={itm.id}>
-						<Avatar alt="Remy Sharp" src={itm.img} />
-						<Typography sx={{ marginLeft: 1 }}>{itm.title}</Typography>
+				{grups.map((item, index) => (
+					<CustomItem
+						key={item.id}
+						onClick={() => handleClick(item.id, item.title, index)}
+						style={
+							selectedButton === item.id
+								? { backgroundColor: 'hsla(0, 0%, 45%, 0.27)' }
+								: undefined
+						}
+					>
+						<Avatar alt="Remy Sharp" src={item.img} />
+						<Typography sx={{ marginLeft: 1 }}>{item.title}</Typography>
 					</CustomItem>
 				))}
 			</List>
-			<hr />
+			<Button onClick={goBackToHome}>Go to Home</Button>
 		</CustomDrawer>
 	)
 }

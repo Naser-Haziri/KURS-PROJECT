@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import DrawerNav from './Drawer/DrawerNav.tsx'
@@ -12,7 +12,7 @@ const grupsArray = [
 	},
 	{
 		img: 'https://i.pinimg.com/736x/a7/c2/1e/a7c21e94addaca34feaf6900499e5c67.jpg',
-		title: 'HTML/CSS',
+		title: 'HTML',
 		id: 'HTML/CSSGrup1',
 	},
 	{
@@ -27,8 +27,24 @@ const grupsArray = [
 	},
 ]
 
+interface Log {
+	user: string
+	message: string
+	id: number
+}
+
 const RootLayOut: React.FC = () => {
-	const [open, setOpen] = React.useState(true)
+	const [open, setOpen] = useState<boolean>(true)
+	const [userName, setUserName] = useState<any>('Guest')
+	const [pfp, setPfp] = useState<any>(null)
+	const [selectedImgandTitle, setSelectedImgandTitle] = useState<number>(0)
+	const startingChat: Log = {
+		user: 'Andy',
+		message: 'Hello friend Welcome to our chat',
+		id: Math.floor(Math.random() * 10) + 1,
+	}
+
+	const [chatLog, setChatLog] = useState<Log[]>([startingChat])
 	const handleDrawerOpen = () => {
 		setOpen(true)
 	}
@@ -39,11 +55,28 @@ const RootLayOut: React.FC = () => {
 
 	return (
 		<>
-			<NavBar fcn={handleDrawerOpen} />
+			<NavBar pfp={pfp} fcn={handleDrawerOpen} />
 
-			<DrawerNav onClose={handleDrawerClose} grups={grupsArray} open={open} />
+			<DrawerNav
+				onClose={handleDrawerClose}
+				grups={grupsArray}
+				open={open}
+				setSelectedImgandTitle={setSelectedImgandTitle}
+				setChatLog={setChatLog}
+			/>
 			<main>
-				<Outlet />
+				<Outlet
+					context={{
+						grupsArray,
+						selectedImgandTitle,
+						chatLog,
+						setChatLog,
+						setPfp,
+						pfp,
+						userName,
+						setUserName,
+					}}
+				/>
 			</main>
 		</>
 	)
